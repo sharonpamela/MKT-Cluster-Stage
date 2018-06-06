@@ -26,8 +26,3 @@ If you encounter issues reach out to @matt on Slack.
 
 Interactive Usage:        stage_workshop
 Non-interactive Usage:    stage_workshop -f cluster_list_file -w workshop_number
-
-Available Workshops:
-1) Calm Introduction Workshop
-2) Citrix Desktop on AHV Workshop
-3) Tech Summit 2018

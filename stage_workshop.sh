@@ -1,7 +1,6 @@
 #!/bin/bash
 
-WORKSHOPS=("Calm Introduction Workshop" \
-"MKT Bootcamp" \
+WORKSHOPS=("MKT Bootcamp" \
 "Refresh Cluster" \
 "Change Cluster Input File" \
 "Quit")
