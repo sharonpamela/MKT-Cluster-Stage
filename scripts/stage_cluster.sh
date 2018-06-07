@@ -149,18 +149,19 @@ my_log "Pool: 10.20.${MY_HPOC_NUMBER}.50 to 10.20.${MY_HPOC_NUMBER}.125"
 acli net.create ${MY_PRIMARY_NET_NAME} vlan=${MY_PRIMARY_NET_VLAN} ip_config=10.20.${MY_HPOC_NUMBER}.1/25
 acli net.update_dhcp_dns ${MY_PRIMARY_NET_NAME} servers=10.20.${MY_HPOC_NUMBER}.40,10.20.253.10 domains=${MY_DOMAIN_NAME}
 acli net.add_dhcp_pool ${MY_PRIMARY_NET_NAME} start=10.20.${MY_HPOC_NUMBER}.50 end=10.20.${MY_HPOC_NUMBER}.125
-# Create secondary network
-if [[ ${MY_SECONDARY_NET_NAME} ]]; then
-  my_log "Create secondary network:"
-  my_log "Name: ${MY_SECONDARY_NET_NAME}"
-  my_log "VLAN: ${MY_SECONDARY_NET_VLAN}"
-  my_log "Subnet: 10.20.${MY_HPOC_NUMBER}.129/25"
-  my_log "Domain: ${MY_DOMAIN_NAME}"
-  my_log "Pool: 10.20.${MY_HPOC_NUMBER}.132 to 10.20.${MY_HPOC_NUMBER}.253"
-  acli net.create ${MY_SECONDARY_NET_NAME} vlan=${MY_SECONDARY_NET_VLAN} ip_config=10.20.${MY_HPOC_NUMBER}.129/25
-  acli net.update_dhcp_dns ${MY_SECONDARY_NET_NAME} servers=10.20.${MY_HPOC_NUMBER}.40,10.21.253.10 domains=${MY_DOMAIN_NAME}
-  acli net.add_dhcp_pool ${MY_SECONDARY_NET_NAME} start=10.20.${MY_HPOC_NUMBER}.132 end=10.20.${MY_HPOC_NUMBER}.253
-fi
+# Create secondary network (OMITTED AS MARKETING GEAR DON'T ALL HAVE SECONDARY VLANS RIGHT NOW)
+#if [[ ${MY_SECONDARY_NET_NAME} ]]; then
+#  my_log "Create secondary network:"
+#  my_log "Name: ${MY_SECONDARY_NET_NAME}"
+#  my_log "VLAN: ${MY_SECONDARY_NET_VLAN}"
+#  my_log "Subnet: 10.20.${MY_HPOC_NUMBER}.129/25"
+#  my_log "Domain: ${MY_DOMAIN_NAME}"
+#  my_log "Pool: 10.20.${MY_HPOC_NUMBER}.132 to 10.20.${MY_HPOC_NUMBER}.253"
+#  acli net.create ${MY_SECONDARY_NET_NAME} vlan=${MY_SECONDARY_NET_VLAN} ip_config=10.20.${MY_HPOC_NUMBER}.129/25
+#  acli net.update_dhcp_dns ${MY_SECONDARY_NET_NAME} servers=10.20.${MY_HPOC_NUMBER}.40,10.21.253.10 domains=${MY_DOMAIN_NAME}
+#  acli net.add_dhcp_pool ${MY_SECONDARY_NET_NAME} start=10.20.${MY_HPOC_NUMBER}.132 end=10.20.${MY_HPOC_NUMBER}.253
+#fi
+
 # Create AutoDC & power on
 my_log "Create DC VM based on AutoDC image"
 acli vm.create DC num_vcpus=2 num_cores_per_vcpu=1 memory=4G
