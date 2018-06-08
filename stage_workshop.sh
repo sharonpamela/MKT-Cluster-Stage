@@ -7,6 +7,7 @@ WORKSHOPS=("MKT Bootcamp" \
 
 function remote_exec {
   sshpass -p $MY_PE_PASSWORD ssh -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null nutanix@$MY_PE_HOST "$@"
+
 }
 
 function send_file {
@@ -103,7 +104,7 @@ function stage_clusters {
     remote_exec "MY_PE_PASSWORD=${MY_PE_PASSWORD} nohup bash /home/nutanix/${PE_CONFIG} >> config.log 2>&1 &"
   done
 
-  echo "Progress of individual clusters can be monitored by SSHing to the cluster's virtual IP and running 'tail -f /home/nutanix/console.log'."
+  echo "Progress of individual clusters can be monitored by SSHing to the cluster's virtual IP and running 'tail -f /home/nutanix/config.log'."
   exit
 }
 

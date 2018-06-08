@@ -63,6 +63,3 @@ curl -u admin:${MY_PE_PASSWORD} -k -H 'Content-Type: application/json' -X PUT \
 
 #my_log "Upgrade PC"
 #cd /home/nutanix/install ; ./bin/cluster -i . -p upgrade
-
-my_log "Downloading Ubuntu ISO"
-wget -nv http://10.21.250.221/images/ahv/techsummit/ubuntu-16.10-desktop-amd64.iso
