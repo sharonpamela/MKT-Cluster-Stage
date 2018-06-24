@@ -296,7 +296,8 @@ MY_DEPLOY_BODY=$(cat <<EOF
           "data_disk_size_bytes":536870912000,
           "nic_list":[{
               "network_configuration":{
-                  "subnet_mask":"255.255.255.128",
+                  "subnet_mask":"255.255.255.0:wq
+                  ",
                   "network_uuid":"${MY_NET_UUID}",
                   "default_gateway":"10.20.${MY_HPOC_NUMBER}.1"
               },
