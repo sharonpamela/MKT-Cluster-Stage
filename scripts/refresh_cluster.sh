@@ -170,10 +170,10 @@ curl -u admin:${MY_PE_PASSWORD} -k -H 'Content-Type: application/json' -X POST h
 my_log "Waiting for PC deployment to complete (Sleeping 15m)"
 sleep 900
 my_log "Sending PC configuration script"
-pc_send_file stage_nexthow_pc.sh
+pc_send_file stage_cluster_pc.sh
 # Execute that file asynchroneously remotely (script keeps running on CVM in the background)
 my_log "Launching PC configuration script"
-pc_remote_exec "MY_PE_PASSWORD=${MY_PE_PASSWORD} nohup bash /home/nutanix/stage_nexthow_pc.sh >> pcconfig.log 2>&1 &"
+pc_remote_exec "MY_PE_PASSWORD=${MY_PE_PASSWORD} nohup bash /home/nutanix/stage_cluster_pc.sh >> pcconfig.log 2>&1 &"
 my_log "Removing sshpass"
 sudo rpm -e sshpass
 my_log "PE Configuration complete"
