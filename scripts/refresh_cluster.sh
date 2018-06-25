@@ -92,14 +92,6 @@ acli vm.nic_create AFSWindowsClient1 network=${MY_PRIMARY_NET_NAME}
 my_log "Power on AFSWindowsClient1 VM"
 acli vm.on AFSWindowsClient1
 
-# Create Windows AFS Client2 VM
-my_log "Create AFSWindowsClient2 VM based on Windows2012 image"
-acli uhura.vm.create_with_customize AFSWindowsClient2 container=Default memory=4G num_cores_per_vcpu=1 num_vcpus=2 sysprep_config_path=https://raw.githubusercontent.com/mattbator/stageworkshop/master/unattend.xml
-acli vm.disk_create AFSWindowsClient2 cdrom=true empty=true
-acli vm.disk_create AFSWindowsClient2 clone_from_image=Windows2012
-acli vm.nic_create AFSWindowsClient2 network=${MY_PRIMARY_NET_NAME}
-my_log "Power on AFSWindowsClient2 VM"
-acli vm.on AFSWindowsClient2
 
 # Create Centos AFS Client1 VM
 my_log "Create AFS Linux Client1 based on CentOS image"
@@ -110,21 +102,13 @@ acli vm.nic_create AFSLinuxClient1 network=${MY_PRIMARY_NET_NAME}
 my_log "Power on AFSLinuxClient1 VM"
 acli vm.on AFSLinuxClient1
 
-# Create Centos AFS Client2 VM
-my_log "Create AFS Linux Client2 based on CentOS image"
-acli vm.create AFSLinuxClient2 num_vcpus=2 num_cores_per_vcpu=1 memory=4G
-acli vm.disk_create AFSLinuxClient2 cdrom=true empty=true
-acli vm.disk_create AFSLinuxClient2 clone_from_image=CentOS7
-acli vm.nic_create AFSLinuxClient2 network=${MY_PRIMARY_NET_NAME}
-my_log "Power on AFSLinuxClient2 VM"
-acli vm.on AFSLinuxClient2
 
 # Create Centos user VM for Microseg lab  & leave powered off
 my_log "Create first VM based on CentOS image"
-acli vm.create CentOS-keep-powered-off num_vcpus=2 num_cores_per_vcpu=1 memory=4G
-acli vm.disk_create CentOS-keep-powered-off cdrom=true empty=true
-acli vm.disk_create CentOS-keep-powered-off clone_from_image=CentOS7
-acli vm.nic_create CentOS-keep-powered-off network=${MY_PRIMARY_NET_NAME}
+acli vm.create CentOS-vm num_vcpus=2 num_cores_per_vcpu=1 memory=4G
+acli vm.disk_create CentOS-vm cdrom=true empty=true
+acli vm.disk_create CentOS-vm clone_from_image=CentOS7
+acli vm.nic_create CentOS-vm network=${MY_PRIMARY_NET_NAME}
 
 # Get UUID from cluster
 my_log "Get UUIDs from cluster:"
@@ -161,12 +145,12 @@ MY_DEPLOY_BODY=$(cat <<EOF
 {
   "resources": {
       "should_auto_register":true,
-      "version":"5.6",
+      "version":"5.7.0.1",
       "pc_vm_list":[{
           "data_disk_size_bytes":536870912000,
           "nic_list":[{
               "network_configuration":{
-                  "subnet_mask":"255.255.255.128",
+                  "subnet_mask":"255.255.255.0",
                   "network_uuid":"${MY_NET_UUID}",
                   "default_gateway":"10.20.${MY_HPOC_NUMBER}.1"
               },

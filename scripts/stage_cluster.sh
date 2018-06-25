@@ -34,10 +34,15 @@ MY_PRIMARY_NET_NAME='Primary'
 MY_PRIMARY_NET_VLAN='0'
 MY_SECONDARY_NET_NAME='Secondary'
 MY_SECONDARY_NET_VLAN="${MY_HPOC_NUMBER}1"
-MY_PC_SRC_URL='http://10.21.250.221/images/ahv/techsummit/euphrates-5.6-stable-prism_central.tar'
-MY_PC_META_URL='http://10.21.250.221/images/ahv/techsummit/euphrates-5.6-stable-prism_central_metadata.json'
-MY_AFS_SRC_URL='http://10.21.250.221/images/ahv/techsummit/nutanix-afs-el7.3-release-afs-3.0.0.1-stable.qcow2'
-MY_AFS_META_URL='http://10.21.250.221/images/ahv/techsummit/nutanix-afs-el7.3-release-afs-3.0.0.1-stable-metadata.json'
+#MY_PC_SRC_URL='http://10.21.250.221/images/ahv/techsummit/euphrates-5.6-stable-prism_central.tar'
+MY_PC_SRC_URL='http://10.20.134.222/images/nutanix_installer_package_pc-release-pc-5.7.0.1-stable-c53600a1de7ab54b33f46916b07f90a1ffab073d.tar.gz'
+#MY_PC_META_URL='http://10.21.250.221/images/ahv/techsummit/euphrates-5.6-stable-prism_central_metadata.json'
+MY_PC_META_URL='http://10.20.134.222/images/nutanix_installer_package_pc-release-pc-5.7.0.1-stable-c53600a1de7ab54b33f46916b07f90a1ffab073d-metadata.json'
+#MY_AFS_SRC_URL='http://10.21.250.221/images/ahv/techsummit/nutanix-afs-el7.3-release-afs-3.0.0.1-stable.qcow2'
+MY_AFS_SRC_URL='http://10.20.134.222/images/nutanix-afs-el7.3-release-afs-3.0.0.1-stable.qcow2'
+#MY_AFS_META_URL='http://10.21.250.221/images/ahv/techsummit/nutanix-afs-el7.3-release-afs-3.0.0.1-stable-metadata.json'
+MY_AFS_META_URL='http://10.20.134.222/images/nutanix-afs-el7.3-release-afs-3.0.0.1-stable-metadata.json'
+
 
 # From this point, we assume:
 # IP Range: 10.20.${MY_HPOC_NUMBER}.0/25
@@ -143,10 +148,10 @@ acli -y net.delete Rx-Automation-Network
 my_log "Create primary network:"
 my_log "Name: ${MY_PRIMARY_NET_NAME}"
 my_log "VLAN: ${MY_PRIMARY_NET_VLAN}"
-my_log "Subnet: 10.20.${MY_HPOC_NUMBER}.1/25"
+my_log "Subnet: 10.20.${MY_HPOC_NUMBER}.1/24"
 my_log "Domain: ${MY_DOMAIN_NAME}"
 my_log "Pool: 10.20.${MY_HPOC_NUMBER}.50 to 10.20.${MY_HPOC_NUMBER}.125"
-acli net.create ${MY_PRIMARY_NET_NAME} vlan=${MY_PRIMARY_NET_VLAN} ip_config=10.20.${MY_HPOC_NUMBER}.1/25
+acli net.create ${MY_PRIMARY_NET_NAME} vlan=${MY_PRIMARY_NET_VLAN} ip_config=10.20.${MY_HPOC_NUMBER}.1/24
 acli net.update_dhcp_dns ${MY_PRIMARY_NET_NAME} servers=10.20.${MY_HPOC_NUMBER}.40,10.20.253.10 domains=${MY_DOMAIN_NAME}
 acli net.add_dhcp_pool ${MY_PRIMARY_NET_NAME} start=10.20.${MY_HPOC_NUMBER}.50 end=10.20.${MY_HPOC_NUMBER}.125
 # Create secondary network (OMITTED AS MARKETING GEAR DON'T ALL HAVE SECONDARY VLANS RIGHT NOW)
@@ -193,15 +198,6 @@ acli vm.nic_create AFSWindowsClient1 network=${MY_PRIMARY_NET_NAME}
 my_log "Power on AFSWindowsClient1 VM"
 acli vm.on AFSWindowsClient1
 
-# Create Windows AFS Client2 VM
-my_log "Create AFSWindowsClient2 VM based on Windows2012 image"
-acli uhura.vm.create_with_customize AFSWindowsClient2 container=Default memory=4G num_cores_per_vcpu=1 num_vcpus=2 sysprep_config_path=https://raw.githubusercontent.com/mattbator/stageworkshop/master/unattend.xml
-acli vm.disk_create AFSWindowsClient2 cdrom=true empty=true
-acli vm.disk_create AFSWindowsClient2 clone_from_image=Windows2012
-acli vm.nic_create AFSWindowsClient2 network=${MY_PRIMARY_NET_NAME}
-my_log "Power on AFSWindowsClient2 VM"
-acli vm.on AFSWindowsClient2
-
 # Create Centos AFS Client1 VM
 my_log "Create AFS Linux Client1 based on CentOS image"
 acli vm.create AFSLinuxClient1 num_vcpus=2 num_cores_per_vcpu=1 memory=4G
@@ -211,21 +207,12 @@ acli vm.nic_create AFSLinuxClient1 network=${MY_PRIMARY_NET_NAME}
 my_log "Power on AFSLinuxClient1 VM"
 acli vm.on AFSLinuxClient1
 
-# Create Centos AFS Client2 VM
-my_log "Create AFS Linux Client2 based on CentOS image"
-acli vm.create AFSLinuxClient2 num_vcpus=2 num_cores_per_vcpu=1 memory=4G
-acli vm.disk_create AFSLinuxClient2 cdrom=true empty=true
-acli vm.disk_create AFSLinuxClient2 clone_from_image=CentOS7
-acli vm.nic_create AFSLinuxClient2 network=${MY_PRIMARY_NET_NAME}
-my_log "Power on AFSLinuxClient2 VM"
-acli vm.on AFSLinuxClient2
-
 # Create Centos user VM for Microseg lab  & leave powered off
 my_log "Create first VM based on CentOS image"
-acli vm.create CentOS-keep-powered-off num_vcpus=2 num_cores_per_vcpu=1 memory=4G
-acli vm.disk_create CentOS-keep-powered-off cdrom=true empty=true
-acli vm.disk_create CentOS-keep-powered-off clone_from_image=CentOS7
-acli vm.nic_create CentOS-keep-powered-off network=${MY_PRIMARY_NET_NAME}
+acli vm.create CentOS-vm num_vcpus=2 num_cores_per_vcpu=1 memory=4G
+acli vm.disk_create CentOS-vm cdrom=true empty=true
+acli vm.disk_create CentOS-vm clone_from_image=CentOS7
+acli vm.nic_create CentOS-vm network=${MY_PRIMARY_NET_NAME}
 
 # Get UUID from cluster
 my_log "Get UUIDs from cluster:"
@@ -291,12 +278,12 @@ MY_DEPLOY_BODY=$(cat <<EOF
 {
   "resources": {
       "should_auto_register":true,
-      "version":"5.6",
+      "version":"5.7.0.1",
       "pc_vm_list":[{
           "data_disk_size_bytes":536870912000,
           "nic_list":[{
               "network_configuration":{
-                  "subnet_mask":"255.255.255.128",
+                  "subnet_mask":"255.255.255.0",
                   "network_uuid":"${MY_NET_UUID}",
                   "default_gateway":"10.20.${MY_HPOC_NUMBER}.1"
               },
