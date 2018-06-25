@@ -45,7 +45,7 @@ MY_AFS_META_URL='http://10.20.134.222/images/nutanix-afs-el7.3-release-afs-3.0.0
 
 
 # From this point, we assume:
-# IP Range: 10.20.${MY_HPOC_NUMBER}.0/25
+# IP Range: 10.20.${MY_HPOC_NUMBER}.0/25 <--- maketing would be /24
 # Gateway: 10.20.${MY_HPOC_NUMBER}.1
 # DNS: 10.21.253.10,10.21.253.11
 # Domain: nutanixdc.local
