@@ -1,12 +1,9 @@
 #!/bin/bash
 
-#MY_PC_UPGRADE_URL='http://10.21.250.221/images/ahv/techsummit/nutanix_installer_package_pc-release-euphrates-5.5.0.6-stable-14bd63735db09b1c9babdaaf48d062723137fc46.tar.gz'
-
 # Script file name
 MY_SCRIPT_NAME=`basename "$0"`
 
 # Derive HPOC number from IP 3rd byte
-#MY_CVM_IP=$(ip addr | grep inet | cut -d ' ' -f 6 | grep ^10.20 | head -n 1)
 MY_CVM_IP=$(/sbin/ifconfig eth0 | grep 'inet ' | awk '{ print $2}')
 array=(${MY_CVM_IP//./ })
 MY_HPOC_NUMBER=${array[2]}
@@ -52,14 +49,3 @@ curl -u admin:${MY_PE_PASSWORD} -k -H 'Content-Type: application/json' -X PUT \
     "isPulsePromptNeeded":false,
     "remindLater":null
 }'
-
-# Prism Central upgrade
-#my_log "Download PC upgrade image: ${MY_PC_UPGRADE_URL##*/}"
-#wget -nv ${MY_PC_UPGRADE_URL}
-
-#my_log "Prepare PC upgrade image"
-#tar -xzf ${MY_PC_UPGRADE_URL##*/}
-#rm ${MY_PC_UPGRADE_URL##*/}
-
-#my_log "Upgrade PC"
-#cd /home/nutanix/install ; ./bin/cluster -i . -p upgrade
