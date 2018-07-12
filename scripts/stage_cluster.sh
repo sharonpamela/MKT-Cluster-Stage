@@ -134,6 +134,20 @@ until [[ $(acli image.create ${MY_IMAGE} container="${MY_IMG_CONTAINER_NAME}" im
   my_log "acli image.create ${MY_IMAGE} FAILED. Retrying upload (${retries} of 5)..."
   sleep 5
 done
+
+MY_IMAGE="server_2012_r2_vl_x64_dvd_3319595.iso"
+retries=1
+my_log "Importing ${MY_IMAGE} image"
+until [[ $(acli image.create ${MY_IMAGE} container="${MY_IMG_CONTAINER_NAME}" image_type=kDiskImage source_url=http://10.20.134.222/images/server_2012_r2_vl_x64_dvd_3319595.iso wait=true) =~ "complete" ]]; do
+  let retries++
+  if [ $retries -gt 5 ]; then
+    my_log "${MY_IMAGE} failed to upload after 5 attempts. This cluster may require manual remediation."
+    acli vm.create STAGING-FAILED-${MY_IMAGE}
+    break
+  fi
+  my_log "acli image.create ${MY_IMAGE} FAILED. Retrying upload (${retries} of 5)..."
+  sleep 5
+done
 # Remove existing VMs, if any
 my_log "Removing \"Windows 2012\" VM if it exists"
 acli -y vm.delete Windows\ 2012\ VM delete_snapshots=true
